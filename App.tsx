@@ -16,6 +16,7 @@ import {
     RobotoMono_700Bold,
 } from "@expo-google-fonts/roboto-mono";
 import { StackClient, StackSurviry } from "@routes/index";
+import { DrawerCustom } from "@routes/DrawerCustom/DrawerCustom";
 
 export default function App() {
     let [fontsLoaded] = useFonts({
@@ -35,7 +36,7 @@ export default function App() {
                         <NetInfoProvider>
                             <Conection />
                             <BottomSheetModalProvider>
-                                <StackSurviry />
+                                <DrawerCustom />
                             </BottomSheetModalProvider>
                         </NetInfoProvider>
                     </SafeAreaProvider>

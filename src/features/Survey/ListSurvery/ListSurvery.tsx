@@ -15,7 +15,14 @@ export function ListSurvery({ navigation }) {
     }
     return (
         <ContainerDefault>
-            <Header isMenu isIconRight={true} fnLeft={() => {}} labelHeader="Listagem vistorias" />
+            <Header
+                isMenu
+                isIconRight={true}
+                fnLeft={() => {
+                    navigation.toggleDrawer();
+                }}
+                labelHeader="Listagem vistorias"
+            />
             <FlatList
                 contentContainerStyle={{
                     paddingHorizontal: lightTheme.size[16],

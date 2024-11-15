@@ -4,7 +4,7 @@ import { FlatList, View } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { styles } from "./styles";
 
-export function ListClient() {
+export function ListClient({ navigation }) {
     function renderItem() {
         return (
             <Card onPress={() => {}}>
@@ -35,7 +35,14 @@ export function ListClient() {
 
     return (
         <ContainerDefault>
-            <Header isMenu isIconRight={true} fnLeft={() => {}} labelHeader="Listagem vistorias" />
+            <Header
+                isMenu
+                isIconRight={true}
+                fnLeft={() => {
+                    navigation.toggleDrawer();
+                }}
+                labelHeader="Listagem Clientes"
+            />
             <FlatList
                 contentContainerStyle={{
                     paddingHorizontal: lightTheme.size[16],
