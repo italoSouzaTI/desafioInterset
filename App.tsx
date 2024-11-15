@@ -3,14 +3,39 @@ import { StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import NetInfoProvider from "./src/provider/NetInfoContext";
+import { lightTheme } from "@core/theme/theme";
+import { Conection } from "@shared/components";
+import {
+    useFonts,
+    RobotoMono_400Regular,
+    RobotoMono_500Medium,
+    RobotoMono_700Bold,
+} from "@expo-google-fonts/roboto-mono";
+import { RegisterSurvery } from "@features/index";
+
 export default function App() {
+    let [fontsLoaded] = useFonts({
+        RobotoMono_400Regular,
+        RobotoMono_500Medium,
+        RobotoMono_700Bold,
+    });
+    if (!fontsLoaded) {
+        return <View />;
+    }
     return (
         <>
-            <StatusBar backgroundColor="#f6f6f6" style="dark" />
+            <StatusBar backgroundColor={lightTheme.colors["white-100"]} style="dark" />
             <GestureHandlerRootView style={styles.container}>
-                <BottomSheetModalProvider>
-                    <View />
-                </BottomSheetModalProvider>
+                <SafeAreaProvider>
+                    <NetInfoProvider>
+                        <Conection />
+                        <BottomSheetModalProvider>
+                            <RegisterSurvery />
+                        </BottomSheetModalProvider>
+                    </NetInfoProvider>
+                </SafeAreaProvider>
             </GestureHandlerRootView>
         </>
     );
@@ -19,6 +44,6 @@ export default function App() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#f6f6f6",
+        backgroundColor: lightTheme.colors["white-300"],
     },
 });

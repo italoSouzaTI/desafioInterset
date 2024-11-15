@@ -1,0 +1,40 @@
+import { verticalScale } from "../../shared/help/metrics";
+
+export const lightTheme = {
+    colors: {
+        "blue-300": "#6D95CD",
+        "white-100": "#FFFFFF",
+        "white-200": "#FAFAFA",
+        "white-300": "#F6F6F6",
+        "gray-300": "#A2A2A2",
+        "gray-400": "#868686",
+        "black-300": "#2E3138",
+        "black-200": "#5E5C6A",
+        "green-300": "#2B7644",
+        "red-300": "#FA7E7E",
+        "red-500": "#762B2C",
+        "orange-500": "#C3613D",
+        "yellow-500": "#FFB412",
+    },
+    size: {
+        "4": verticalScale(4),
+        "8": verticalScale(8),
+        "12": verticalScale(12),
+        "14": verticalScale(14),
+        "16": verticalScale(16),
+        "18": verticalScale(18),
+        "20": verticalScale(20),
+        "22": verticalScale(22),
+        "24": verticalScale(24),
+        "26": verticalScale(26),
+        "28": verticalScale(26),
+        "30": verticalScale(26),
+        "32": verticalScale(26),
+        "60": verticalScale(60),
+    },
+    FONT_FAMILLY: {
+        REGULAR: "RobotoMono_400Regular",
+        BOLD: "RobotoMono_700Bold",
+        MEDIUM: "RobotoMono_500Medium",
+    },
+};
