@@ -4,13 +4,17 @@ import { ScrollView, View } from "react-native";
 import { useRegisterSurveryModelView } from "./useRegisterSurveryModelView";
 import { verticalScale } from "@shared/help/metrics";
 import { ButtomCustom } from "@shared/components/Buttom/Buttom";
+import { useNavigation } from "@react-navigation/native";
 
 export function RegisterSurvery() {
+    const { goBack } = useNavigation();
     const { control, handleSubmit, errors, params } = useRegisterSurveryModelView();
     return (
         <ContainerDefault>
             <Header
-                fnLeft={() => {}}
+                fnLeft={() => {
+                    goBack();
+                }}
                 labelHeader={params.data?.id ? "Editar vitoria" : "Registrar vitoria"}
                 isMenu={false}
                 isIconRight={false}

@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
         justifyContent: "space-between",
     },
     bagde: {
-        padding: lightTheme.size[8],
+        padding: lightTheme.size[4],
 
         borderRadius: lightTheme.size[32],
         justifyContent: "center",

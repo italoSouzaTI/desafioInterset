@@ -5,7 +5,7 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
     container: {
         width: "100%",
-        height: verticalScale(54),
+        minHeight: verticalScale(54),
         backgroundColor: lightTheme.colors["white-100"],
         flexDirection: "row",
         padding: lightTheme.size[16],

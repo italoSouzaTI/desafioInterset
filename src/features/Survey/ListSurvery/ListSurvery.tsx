@@ -3,7 +3,7 @@ import { FlatList, View } from "react-native";
 import { CardSurvey } from "../components/CardSurvey/CardSurvey";
 import { lightTheme } from "@core/theme/theme";
 
-export function ListSurvery() {
+export function ListSurvery({ navigation }) {
     function renderItem() {
         return <CardSurvey />;
     }
@@ -27,7 +27,11 @@ export function ListSurvery() {
                 ItemSeparatorComponent={ItemSeparatorComponent}
             />
 
-            <FloatButtom onPress={() => {}} />
+            <FloatButtom
+                onPress={() => {
+                    navigation.navigate("RegisterSurvery", { data: {} });
+                }}
+            />
         </ContainerDefault>
     );
 }

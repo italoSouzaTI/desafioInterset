@@ -1,3 +1,5 @@
+import "react-native-gesture-handler";
+import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -13,7 +15,7 @@ import {
     RobotoMono_500Medium,
     RobotoMono_700Bold,
 } from "@expo-google-fonts/roboto-mono";
-import { RegisterSurvery } from "@features/index";
+import { StackClient, StackSurviry } from "@routes/index";
 
 export default function App() {
     let [fontsLoaded] = useFonts({
@@ -28,14 +30,16 @@ export default function App() {
         <>
             <StatusBar backgroundColor={lightTheme.colors["white-100"]} style="dark" />
             <GestureHandlerRootView style={styles.container}>
-                <SafeAreaProvider>
-                    <NetInfoProvider>
-                        <Conection />
-                        <BottomSheetModalProvider>
-                            <RegisterSurvery />
-                        </BottomSheetModalProvider>
-                    </NetInfoProvider>
-                </SafeAreaProvider>
+                <NavigationContainer>
+                    <SafeAreaProvider>
+                        <NetInfoProvider>
+                            <Conection />
+                            <BottomSheetModalProvider>
+                                <StackSurviry />
+                            </BottomSheetModalProvider>
+                        </NetInfoProvider>
+                    </SafeAreaProvider>
+                </NavigationContainer>
             </GestureHandlerRootView>
         </>
     );

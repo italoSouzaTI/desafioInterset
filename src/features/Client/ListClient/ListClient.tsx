@@ -32,6 +32,7 @@ export function ListClient() {
     function ItemSeparatorComponent() {
         return <View style={{ width: "100%", height: lightTheme.size[16] }} />;
     }
+
     return (
         <ContainerDefault>
             <Header isMenu isIconRight={true} fnLeft={() => {}} labelHeader="Listagem vistorias" />
