@@ -1,24 +1,29 @@
 {
-  "name": "desafiointerset",
-  "version": "1.0.0",
-  "main": "index.ts",
-  "scripts": {
-    "start": "expo start",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
-    "web": "expo start --web"
-  },
-  "dependencies": {
-    "expo": "~52.0.7",
-    "expo-status-bar": "~2.0.0",
-    "react": "18.3.1",
-    "react-native": "0.76.2"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.25.2",
-    "@types/react": "~18.3.12",
-    "git-commit-msg-linter": "^5.0.8",
-    "typescript": "^5.3.3"
-  },
-  "private": true
+    "name": "desafiointerset",
+    "version": "1.0.0",
+    "main": "index.ts",
+    "scripts": {
+        "start": "expo start",
+        "android": "expo run:android && adb reverse tcp:9090 tcp:9090",
+        "build_android_test": "cd android && gradlew clean && gradlew assembleRelease && cd ..",
+        "build_android_production": "cd android && ./gradlew clean && ./gradlew bundleRelease && cd ..",
+        "build_android_debug": "cd android && ./gradlew clean && ./gradlew assembleDebug && cd ..",
+        "cache-clean": "npm cache clean --force && cd android && ./gradlew clean && cd ..",
+        "clean-gradlew": "cd android && ./gradlew clean && cd ..",
+        "ios": "expo run:ios",
+        "web": "expo start --web"
+    },
+    "dependencies": {
+        "expo": "51",
+        "expo-status-bar": "~1.12.1",
+        "react": "18.2.0",
+        "react-native": "0.74.5"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.20.0",
+        "@types/react": "~18.3.12",
+        "git-commit-msg-linter": "^5.0.8",
+        "typescript": "^5.1.3"
+    },
+    "private": true
 }
