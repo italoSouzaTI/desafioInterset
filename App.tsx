@@ -1,12 +1,10 @@
 import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import NetInfoProvider from "./src/provider/NetInfoContext";
 import { lightTheme } from "@core/theme/theme";
 import { Conection } from "@shared/components";
 import {
@@ -15,18 +13,17 @@ import {
     RobotoMono_500Medium,
     RobotoMono_700Bold,
 } from "@expo-google-fonts/roboto-mono";
-import { StackClient, StackSurviry } from "@routes/index";
+import "./ReactotronConfig";
 import { DrawerCustom } from "@routes/DrawerCustom/DrawerCustom";
-
+import NetInfoProvider from "@core/provider/NetInfoContext";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+const queryClient = new QueryClient();
 export default function App() {
     let [fontsLoaded] = useFonts({
         RobotoMono_400Regular,
         RobotoMono_500Medium,
         RobotoMono_700Bold,
     });
-    if (!fontsLoaded) {
-        return <View />;
-    }
     return (
         <>
             <StatusBar backgroundColor={lightTheme.colors["white-100"]} style="dark" />
@@ -34,10 +31,33 @@ export default function App() {
                 <NavigationContainer>
                     <SafeAreaProvider>
                         <NetInfoProvider>
-                            <Conection />
-                            <BottomSheetModalProvider>
-                                <DrawerCustom />
-                            </BottomSheetModalProvider>
+                            <QueryClientProvider client={queryClient}>
+                                <BottomSheetModalProvider>
+                                    {fontsLoaded ? (
+                                        <>
+                                            <Conection />
+                                            <DrawerCustom />
+                                        </>
+                                    ) : (
+                                        <View
+                                            style={{
+                                                flex: 1,
+                                                justifyContent: "center",
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            <Image
+                                                style={{
+                                                    width: 100,
+                                                    height: 100,
+                                                    resizeMode: "contain",
+                                                }}
+                                                source={require("./assets/splash-icon.png")}
+                                            />
+                                        </View>
+                                    )}
+                                </BottomSheetModalProvider>
+                            </QueryClientProvider>
                         </NetInfoProvider>
                     </SafeAreaProvider>
                 </NavigationContainer>

@@ -8,6 +8,7 @@ export const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         padding: lightTheme.size[12],
+        gap: lightTheme.size[8],
     },
     buttomDrawer: {
         flexDirection: "row",

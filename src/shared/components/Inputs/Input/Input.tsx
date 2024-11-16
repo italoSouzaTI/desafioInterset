@@ -5,7 +5,7 @@ import { styles } from "./styles";
 
 interface InputProps {
     error?: string;
-    label: string;
+    label?: string;
     formProps: UseControllerProps;
     restInput: TextInputProps;
 }
@@ -15,7 +15,7 @@ export function Input({ label, restInput, formProps, error = "" }: InputProps) {
             render={({ field }) => (
                 <>
                     <View style={styles.container}>
-                        <Text style={styles.title}>{label}</Text>
+                        {label && <Text style={styles.title}>{label}</Text>}
                         <View
                             style={[
                                 styles.containerInput,

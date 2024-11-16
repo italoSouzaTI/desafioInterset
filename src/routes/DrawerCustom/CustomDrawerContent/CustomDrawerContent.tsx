@@ -13,9 +13,7 @@ export function CustomDrawerContent(props) {
         clientAction: { label: "Cliente" },
     };
     function namePage(label: string) {
-        console.log("label", label);
         const labelMenu = nameMenuItem[label];
-        console.log("saida", labelMenu);
 
         return labelMenu.label;
     }
@@ -30,6 +28,7 @@ export function CustomDrawerContent(props) {
         >
             <View style={styles.container}>
                 <Logo />
+                <Typography label="Interset Tecnologia" familly="BOLD" />
             </View>
             <View style={styles.ContainerBtn}>
                 {state.routes.map((item) => (

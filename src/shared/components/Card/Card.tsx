@@ -7,7 +7,7 @@ interface CardProps {
 }
 export function Card({ children, onPress }: CardProps) {
     return (
-        <TouchableOpacity activeOpacity={0.8} onPress={onPress} style={styles.container}>
+        <TouchableOpacity activeOpacity={0.5} onPress={onPress} style={styles.container}>
             {children}
         </TouchableOpacity>
     );
