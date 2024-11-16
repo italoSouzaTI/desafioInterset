@@ -9,7 +9,6 @@ export function useListSuveryModelView() {
         queryKey: ["KeyListSurvery"],
         queryFn: getAllSurvery,
     });
-    console.log(listSurveryRequest.data?.data);
     useEffect(() => {
         if (listSurveryRequest.data?.data != undefined) {
             setListSurvery(listSurveryRequest.data?.data);

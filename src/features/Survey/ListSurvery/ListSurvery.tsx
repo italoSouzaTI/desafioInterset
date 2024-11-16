@@ -40,6 +40,7 @@ export function ListSurvery({ navigation }) {
                         paddingBottom: 70,
                     }}
                     data={listSurvery}
+                    keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => renderItem(item)}
                     ListEmptyComponent={ListEmptyComponent}
                     ItemSeparatorComponent={ItemSeparatorComponent}

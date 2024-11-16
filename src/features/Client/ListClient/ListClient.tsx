@@ -125,6 +125,7 @@ export function ListClient({ navigation }) {
                         paddingBottom: 40,
                     }}
                     data={listClient}
+                    keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => renderItem(item)}
                     ListEmptyComponent={ListEmptyComponent}
                     ItemSeparatorComponent={ItemSeparatorComponent}

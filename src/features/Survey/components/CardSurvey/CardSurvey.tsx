@@ -41,7 +41,7 @@ export function CardSurvey({ item }: ICardSurveyPros) {
     return (
         <Card
             onPress={() => {
-                navigate("RegisterSurvery", { data: item });
+                navigate("DetailsSurvery", { data: item });
             }}
         >
             <View style={styles.row}>
