@@ -1,9 +1,10 @@
 import { ListSurvery, RegisterSurvery } from "@features/index";
+import { IlistSurveryDTO } from "@features/Survey/api/dto/listSurveryDTO";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 type RootStackSurviry = {
     ListSurvery: undefined;
-    RegisterSurvery: undefined;
+    RegisterSurvery: { data: IlistSurveryDTO };
 };
 const SurviryStack = createNativeStackNavigator<RootStackSurviry>();
 export function StackSurviry() {

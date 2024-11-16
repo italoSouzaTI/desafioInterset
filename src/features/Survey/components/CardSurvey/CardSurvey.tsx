@@ -3,9 +3,47 @@ import { View } from "react-native";
 import { styles } from "./styles";
 import { lightTheme } from "@core/theme/theme";
 import { MaterialIcons } from "@expo/vector-icons";
-export function CardSurvey() {
+import { IlistSurveryDTO } from "@features/Survey/api/dto/listSurveryDTO";
+import { formartDate } from "@shared/help/formatDate";
+import { useNavigation } from "@react-navigation/native";
+interface ICardSurveyPros {
+    item: IlistSurveryDTO;
+}
+function colorBagde(item: string) {
+    if (item == "Alta") {
+        return (
+            <View style={[styles.bagde, { backgroundColor: lightTheme.colors["green-300"] }]}>
+                <Typography label="Alta" colorsSelect="white-200" sizeSelect="12" familly="BOLD" />
+            </View>
+        );
+    } else if (item == "Não informado") {
+        return (
+            <View style={[styles.bagde, { backgroundColor: lightTheme.colors["gray-300"] }]}>
+                <Typography label="Não informado" colorsSelect="white-200" sizeSelect="12" familly="BOLD" />
+            </View>
+        );
+    } else if (item == "Baixa") {
+        return (
+            <View style={[styles.bagde, { backgroundColor: lightTheme.colors["red-300"] }]}>
+                <Typography label="Baixa" colorsSelect="red-500" sizeSelect="12" familly="BOLD" />
+            </View>
+        );
+    } else if (item == "Média") {
+        return (
+            <View style={[styles.bagde, { backgroundColor: lightTheme.colors["orange-500"] }]}>
+                <Typography label="Média" colorsSelect="white-200" sizeSelect="12" familly="BOLD" />
+            </View>
+        );
+    }
+}
+export function CardSurvey({ item }: ICardSurveyPros) {
+    const { navigate } = useNavigation();
     return (
-        <Card onPress={() => {}}>
+        <Card
+            onPress={() => {
+                navigate("RegisterSurvery", { data: item });
+            }}
+        >
             <View style={styles.row}>
                 <View
                     style={{
@@ -13,17 +51,21 @@ export function CardSurvey() {
                     }}
                 >
                     <Typography label="Tipo" sizeSelect="12" colorsSelect="black-200" familly="BOLD" />
-                    <Typography label="Endógena" sizeSelect="12" familly="BOLD" />
+                    <Typography label={item.tipo?.descricao ?? "Não informado"} sizeSelect="12" familly="BOLD" />
                 </View>
                 <View
                     style={{
                         gap: lightTheme.size[8],
                     }}
                 >
-                    <Typography label="Categoria" sizeSelect="12" familly="BOLD" colorsSelect="black-200" />
-                    <View style={[styles.bagde, { backgroundColor: lightTheme.colors["green-300"] }]}>
-                        <Typography label="Alta" colorsSelect="white-200" sizeSelect="12" familly="BOLD" />
-                    </View>
+                    <Typography
+                        label="Categoria"
+                        sizeSelect="12"
+                        familly="BOLD"
+                        colorsSelect="black-200"
+                        style={{ textAlign: "right" }}
+                    />
+                    {colorBagde(item.categoria?.descricao ?? "Não informado")}
                 </View>
             </View>
             <View style={[styles.row, { alignItems: "center" }]}>
@@ -33,7 +75,7 @@ export function CardSurvey() {
                     }}
                 >
                     <Typography label="Anomalia" sizeSelect="12" colorsSelect="black-200" familly="BOLD" />
-                    <Typography label="Manchamento de umidade" sizeSelect="12" familly="BOLD" />
+                    <Typography label={item.anomalia?.nome ?? "Não informado"} sizeSelect="12" familly="BOLD" />
                 </View>
                 <MaterialIcons
                     name="arrow-forward-ios"
@@ -51,7 +93,7 @@ export function CardSurvey() {
                     <Typography label="Observação" sizeSelect="12" colorsSelect="black-200" familly="BOLD" />
                     <Typography
                         numberOfLines={1}
-                        label="Manchamento de umidade no forro do wc"
+                        label={item.observacao ?? "Não informado"}
                         sizeSelect="12"
                         familly="BOLD"
                     />
@@ -61,8 +103,18 @@ export function CardSurvey() {
                         gap: lightTheme.size[8],
                     }}
                 >
-                    <Typography label="Criado em " sizeSelect="12" colorsSelect="black-200" familly="BOLD" />
-                    <Typography label="27/09/202417:26:15:46" sizeSelect="12" familly="BOLD" />
+                    <Typography
+                        label="Criado em "
+                        sizeSelect="12"
+                        colorsSelect="black-200"
+                        familly="BOLD"
+                        style={{ textAlign: "right" }}
+                    />
+                    <Typography
+                        label={item.dataHora ? formartDate(item.dataHora) : "Não informado"}
+                        sizeSelect="12"
+                        familly="BOLD"
+                    />
                 </View>
             </View>
         </Card>

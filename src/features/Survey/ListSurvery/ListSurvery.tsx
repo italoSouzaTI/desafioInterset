@@ -2,13 +2,17 @@ import { ContainerDefault, FloatButtom, Header, Typography } from "@shared/compo
 import { FlatList, View } from "react-native";
 import { CardSurvey } from "../components/CardSurvey/CardSurvey";
 import { lightTheme } from "@core/theme/theme";
+import { useListSuveryModelView } from "./useListSuveryModelView";
+import { verticalScale } from "@shared/help/metrics";
+import { IlistSurveryDTO } from "../api/dto/listSurveryDTO";
 
 export function ListSurvery({ navigation }) {
-    function renderItem() {
-        return <CardSurvey />;
+    const { listSurveryRequest, listSurvery } = useListSuveryModelView();
+    function renderItem(item: IlistSurveryDTO) {
+        return <CardSurvey item={item} />;
     }
     function ListEmptyComponent() {
-        return <Typography label="Nenhuma vistoria encontrada." />;
+        return <Typography label="Nenhuma vistoria encontrada." style={{ textAlign: "center" }} />;
     }
     function ItemSeparatorComponent() {
         return <View style={{ width: "100%", height: lightTheme.size[16] }} />;
@@ -23,16 +27,24 @@ export function ListSurvery({ navigation }) {
                 }}
                 labelHeader="Listagem vistorias"
             />
-            <FlatList
-                contentContainerStyle={{
-                    paddingHorizontal: lightTheme.size[16],
-                    paddingVertical: 40,
+            <View
+                style={{
+                    flex: 1,
+                    top: verticalScale(30),
                 }}
-                data={[1, 2]}
-                renderItem={renderItem}
-                ListEmptyComponent={ListEmptyComponent}
-                ItemSeparatorComponent={ItemSeparatorComponent}
-            />
+            >
+                <FlatList
+                    contentContainerStyle={{
+                        paddingHorizontal: lightTheme.size[16],
+                        paddingTop: lightTheme.size[16],
+                        paddingBottom: 70,
+                    }}
+                    data={listSurvery}
+                    renderItem={({ item }) => renderItem(item)}
+                    ListEmptyComponent={ListEmptyComponent}
+                    ItemSeparatorComponent={ItemSeparatorComponent}
+                />
+            </View>
 
             <FloatButtom
                 onPress={() => {

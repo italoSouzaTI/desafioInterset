@@ -121,8 +121,8 @@ export function ListClient({ navigation }) {
                     contentContainerStyle={{
                         flexGrow: 1,
                         paddingHorizontal: lightTheme.size[16],
-                        paddingVertical: 40,
-                        marginBottom: 40,
+                        paddingTop: lightTheme.size[16],
+                        paddingBottom: 40,
                     }}
                     data={listClient}
                     renderItem={({ item }) => renderItem(item)}
