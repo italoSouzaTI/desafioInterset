@@ -1,4 +1,3 @@
-import { useRoute } from "@react-navigation/native";
 import { ContainerDefault, Header, Typography } from "@shared/components";
 import { Dimensions, FlatList, Image, View } from "react-native";
 import { styles } from "./styles";
@@ -9,7 +8,7 @@ import { formartDate } from "@shared/help/formatDate";
 import { ButtomCustom } from "@shared/components/Buttom/Buttom";
 
 export function DetailsSurvery() {
-    const { activeIndex, params, handleScroll, goBack } = useDetailsSurveryModelView();
+    const { activeIndex, params, handleScroll, goBack, handleEdit } = useDetailsSurveryModelView();
     function colorBagde(item: string) {
         if (item == "Alta") {
             return (
@@ -37,6 +36,21 @@ export function DetailsSurvery() {
             );
         }
     }
+    function renderItem(item: any) {
+        return (
+            <Image
+                source={{ uri: item }}
+                style={{
+                    width: Dimensions.get("window").width, // A imagem ocupa toda a largura da tela
+                    height: 300, // Define a altura da imagem
+                    resizeMode: "contain",
+                }}
+            />
+        );
+    }
+    function ListEmptyComponent() {
+        return <Typography label="Nenhuma imagem registrada." colorsSelect="white-100" />;
+    }
     return (
         <ContainerDefault>
             <Header
@@ -59,16 +73,8 @@ export function DetailsSurvery() {
                             justifyContent: "center", // Centraliza verticalmente o conteúdo
                             alignItems: "center",
                         }}
-                        renderItem={({ item }) => (
-                            <Image
-                                source={{ uri: item }}
-                                style={{
-                                    width: Dimensions.get("window").width, // A imagem ocupa toda a largura da tela
-                                    height: 300, // Define a altura da imagem
-                                    resizeMode: "contain",
-                                }}
-                            />
-                        )}
+                        renderItem={({ item }) => renderItem(item)}
+                        ListEmptyComponent={ListEmptyComponent}
                     />
                     <View style={styles.pageIndicatorContainer}>
                         {params.data.fotos.map((_, index) => (
@@ -147,7 +153,7 @@ export function DetailsSurvery() {
                     </View>
                 </ScrollView>
                 <View style={styles.containerBtn}>
-                    <ButtomCustom onPress={() => {}} colorBg={"yellow-500"}>
+                    <ButtomCustom onPress={handleEdit} colorBg={"yellow-500"}>
                         <Typography label="Editar" familly="BOLD" colorsSelect={"black-300"} sizeSelect="18" />
                     </ButtomCustom>
                 </View>

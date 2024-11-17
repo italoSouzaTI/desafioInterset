@@ -4,7 +4,7 @@ import { Dimensions } from "react-native";
 
 export function useDetailsSurveryModelView() {
     const { params } = useRoute();
-    const { goBack } = useNavigation();
+    const { goBack, navigate } = useNavigation();
     const [activeIndex, setActiveIndex] = useState(0);
     const { width } = Dimensions.get("window");
     const handleScroll = (event) => {
@@ -12,9 +12,13 @@ export function useDetailsSurveryModelView() {
         const currentIndex = Math.floor(contentOffsetX / width);
         setActiveIndex(currentIndex);
     };
+    function handleEdit() {
+        navigate("RegisterSurvery", { data: params.data });
+    }
     return {
         activeIndex,
         params,
+        handleEdit,
         handleScroll,
         goBack,
     };

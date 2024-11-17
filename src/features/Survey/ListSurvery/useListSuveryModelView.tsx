@@ -4,17 +4,20 @@ import { useEffect, useState } from "react";
 import { IlistSurveryDTO } from "../api/dto/listSurveryDTO";
 import { getAllInternalInspectionArea } from "../api/http/listInternalInspectionArea.http";
 import { useInternalAreaStore } from "@store/useInternalAreaStore";
-import { getTypeAnomaly } from "../api/http/typeAnomaly.http";
 import { useTypeAnomalyStore } from "@store/useTypeAnomalyStore";
 import { getAllCategory } from "../api/http/listCategory.http";
 import { useCategoryStore } from "@store/useCategoryStore";
 import { useCameraPermissions } from "expo-camera";
+import { getTypeAnomaly } from "../api/http/typeAnomaly.http";
+import { getAnomaly } from "../api/http/anomaly.http";
+import { useAnomalyStore } from "@store/useAnomalyStore";
 
 export function useListSuveryModelView() {
     const [listSurvery, setListSurvery] = useState<IlistSurveryDTO[]>([]);
     const { handleInternalArea } = useInternalAreaStore((state) => state);
     const { handleTypeAnomaly } = useTypeAnomalyStore((state) => state);
     const { handleCategory } = useCategoryStore((state) => state);
+    const { handleAnomaly } = useAnomalyStore((state) => state);
     const [cameraStatus, requestCameraPermission] = useCameraPermissions();
 
     const listSurveryRequest = useQuery({
@@ -32,6 +35,10 @@ export function useListSuveryModelView() {
     const listCategory = useQuery({
         queryKey: ["keyCategory"],
         queryFn: getAllCategory,
+    });
+    const listAnomaly = useQuery({
+        queryKey: ["keyAnomaly"],
+        queryFn: getAnomaly,
     });
     async function requestCameraPermissionIfNeeded() {
         try {
@@ -69,6 +76,11 @@ export function useListSuveryModelView() {
             handleCategory(listCategory.data?.data);
         }
     }, [listCategory.data]);
+    useEffect(() => {
+        if (listAnomaly.data?.data != undefined) {
+            handleAnomaly(listAnomaly.data?.data);
+        }
+    }, [listAnomaly.data]);
 
     return {
         listSurveryRequest,

@@ -2,6 +2,7 @@ import { create } from "zustand";
 interface RegisterSurvery {
     surveryArea: object;
     anomaly: object;
+    typeAnomaly: object;
     category: object;
     description: string;
     photo: object[];
@@ -17,6 +18,7 @@ export const useRegisterSurveryStore = create<State & Action>((set) => ({
     register: {
         surveryArea: {},
         anomaly: {},
+        typeAnomaly: {},
         category: {},
         description: "",
         photo: [],

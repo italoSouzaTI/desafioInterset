@@ -1,15 +1,13 @@
 import { lightTheme } from "@core/theme/theme";
 import { ContainerDefault, Header, Select, TextArea, Typography } from "@shared/components";
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Image, ScrollView, TouchableOpacity, View } from "react-native";
 import { useRegisterSurveryModelView } from "./useRegisterSurveryModelView";
 import { verticalScale } from "@shared/help/metrics";
 import { ButtomCustom } from "@shared/components/Buttom/Buttom";
-import { useNavigation } from "@react-navigation/native";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5, AntDesign } from "@expo/vector-icons";
 import { styles } from "./style";
 
 export function RegisterSurvery() {
-    const { goBack, navigate } = useNavigation();
     const {
         control,
         errors,
@@ -17,8 +15,17 @@ export function RegisterSurvery() {
         listInternalArea,
         isSelectOpen,
         anomaly,
+        scrollRef,
         listTypeAnomaly,
         listCategory,
+        registerStore,
+        isanomaly,
+        listAnomaly,
+        isLoadingSend,
+        isloadingDelete,
+        handleCamera,
+        handleGoBack,
+        removePhoto,
         onSelectToggle,
         handleSubmit,
         handleSave,
@@ -27,9 +34,7 @@ export function RegisterSurvery() {
     return (
         <ContainerDefault>
             <Header
-                fnLeft={() => {
-                    goBack();
-                }}
+                fnLeft={handleGoBack}
                 labelHeader={params.data?.id ? "Editar vitoria" : "Registrar vitoria"}
                 isMenu={false}
                 isIconRight={false}
@@ -41,6 +46,7 @@ export function RegisterSurvery() {
                 }}
             >
                 <ScrollView
+                    ref={scrollRef}
                     scrollEnabled={!isSelectOpen}
                     contentContainerStyle={{
                         flexGrow: 1,
@@ -66,7 +72,7 @@ export function RegisterSurvery() {
                         dataItens={listInternalArea}
                     />
                     <Select
-                        label="Anomalia"
+                        label="tem anomalia"
                         error={errors.isAnomaly?.message}
                         formProps={{
                             name: "isAnomaly",
@@ -79,7 +85,7 @@ export function RegisterSurvery() {
                             placeholder: "Selecione",
                         }}
                         onToggle={onSelectToggle}
-                        dataItens={anomaly}
+                        dataItens={isanomaly}
                     />
                     <Select
                         label="Tipo anomalia"
@@ -96,6 +102,22 @@ export function RegisterSurvery() {
                         }}
                         onToggle={onSelectToggle}
                         dataItens={listTypeAnomaly}
+                    />
+                    <Select
+                        label="Anomalia"
+                        error={errors.anomaly?.message}
+                        formProps={{
+                            name: "anomaly",
+                            control,
+                            rules: {
+                                required: "A seleção de um item é obrigatorio.",
+                            },
+                        }}
+                        restInput={{
+                            placeholder: "Selecione",
+                        }}
+                        onToggle={onSelectToggle}
+                        dataItens={listAnomaly}
                     />
                     <Select
                         label="Categoria"
@@ -127,7 +149,39 @@ export function RegisterSurvery() {
                     <Typography label="Fotos da vistoria" familly="BOLD" sizeSelect="16" />
                     {/* Recuperar fotos  aqui*/}
                     <View style={styles.containerRow}>
-                        <TouchableOpacity style={styles.containerPhoto} onPress={() => navigate("CameraCustom")}>
+                        {registerStore.register.photo.map((item) => (
+                            <View style={{ position: "relative" }} key={item.url}>
+                                {isloadingDelete ? (
+                                    <View
+                                        style={{
+                                            position: "absolute",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            zIndex: 9,
+                                        }}
+                                    >
+                                        <ActivityIndicator
+                                            size={lightTheme.size[32]}
+                                            color={lightTheme.colors["white-100"]}
+                                            animating={isloadingDelete}
+                                        />
+                                    </View>
+                                ) : (
+                                    <TouchableOpacity
+                                        style={styles.btnClosed}
+                                        onPress={() => {
+                                            removePhoto(item);
+                                        }}
+                                    >
+                                        <AntDesign name="closecircle" size={24} color={lightTheme.colors["red-500"]} />
+                                    </TouchableOpacity>
+                                )}
+
+                                <Image style={styles.containerPhoto} source={{ uri: item.url }} />
+                            </View>
+                        ))}
+
+                        <TouchableOpacity style={styles.containerPhoto} onPress={handleCamera}>
                             <FontAwesome5
                                 name="plus"
                                 color={lightTheme.colors["gray-300"]}
@@ -144,12 +198,20 @@ export function RegisterSurvery() {
                             onPress={handleSubmit(handleSave)}
                             colorBg={params.data?.id ? "yellow-500" : "green-300"}
                         >
-                            <Typography
-                                label="Salvar"
-                                familly="BOLD"
-                                colorsSelect={params.data?.id ? "black-300" : "white-200"}
-                                sizeSelect="18"
-                            />
+                            {isLoadingSend ? (
+                                <ActivityIndicator
+                                    size={lightTheme.size[32]}
+                                    color={lightTheme.colors["white-100"]}
+                                    animating={isLoadingSend}
+                                />
+                            ) : (
+                                <Typography
+                                    label="Salvar"
+                                    familly="BOLD"
+                                    colorsSelect={params.data?.id ? "black-300" : "white-200"}
+                                    sizeSelect="18"
+                                />
+                            )}
                         </ButtomCustom>
                     </View>
                 </ScrollView>

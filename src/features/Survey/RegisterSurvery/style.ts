@@ -6,6 +6,7 @@ export const styles = StyleSheet.create({
     containerRow: {
         flexWrap: "wrap",
         flexDirection: "row",
+        gap: lightTheme.size[8],
     },
     containerPhoto: {
         width: verticalScale(110),
@@ -16,5 +17,11 @@ export const styles = StyleSheet.create({
         borderColor: lightTheme.colors["gray-300"],
         justifyContent: "center",
         alignItems: "center",
+    },
+    btnClosed: {
+        position: "absolute",
+        zIndex: 9,
+        right: -8,
+        top: -8,
     },
 });

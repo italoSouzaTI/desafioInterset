@@ -1,12 +1,10 @@
 import { CameraView } from "expo-camera";
-import { useRef, useState } from "react";
 import { CropView } from "react-native-image-crop-tools";
 import { styles } from "./styles";
 import { Dimensions, Platform, TouchableOpacity, View } from "react-native";
 import { Ionicons, MaterialCommunityIcons, MaterialIcons, FontAwesome } from "@expo/vector-icons";
 import { lightTheme } from "@core/theme/theme";
 import { verticalScale } from "@shared/help/metrics";
-import { useNavigation } from "@react-navigation/native";
 import { Header } from "../Header/Header";
 import { Typography } from "../Typography/Typography";
 import { useCameraCustomModelView } from "./useCameraCustomModelView";
