@@ -3,7 +3,7 @@ import { IlistSurveryDTO } from "../dto/listSurveryDTO";
 
 export const getAllSurvery = async () => {
     try {
-        const response = await baseURL.get<IlistSurveryDTO>(`vistoria/all`);
+        const response = await baseURL.get<IlistSurveryDTO[]>(`vistoria/all`);
         return response;
     } catch (error) {
         throw error;

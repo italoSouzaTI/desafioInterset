@@ -1,5 +1,5 @@
 import { lightTheme } from "@core/theme/theme";
-import { horizontalScale } from "@shared/help/metrics";
+import { horizontalScale, verticalScale } from "@shared/help/metrics";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
@@ -24,6 +24,7 @@ export const styles = StyleSheet.create({
     listSelect: {
         width: "100%",
         minHeight: lightTheme.size["60"],
+        maxHeight: verticalScale(250),
         backgroundColor: "white",
         borderRadius: lightTheme.size["8"],
         position: "absolute",
@@ -35,6 +36,8 @@ export const styles = StyleSheet.create({
     },
     input: {
         width: "90%",
+        color: lightTheme.colors["black-300"],
+        fontFamily: lightTheme.FONT_FAMILLY.MEDIUM,
     },
     error: {
         color: lightTheme.colors["red-300"],

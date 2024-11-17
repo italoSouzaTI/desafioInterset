@@ -39,6 +39,8 @@ export function ListSurvery({ navigation }) {
                         paddingTop: lightTheme.size[16],
                         paddingBottom: 70,
                     }}
+                    refreshing={listSurveryRequest.isFetching}
+                    onRefresh={listSurveryRequest.refetch}
                     data={listSurvery}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => renderItem(item)}

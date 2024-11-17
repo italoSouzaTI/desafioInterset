@@ -7,3 +7,4 @@ export * from "./Inputs/TextArea/TextArea";
 export * from "./Header/Header";
 export * from "./Typography/Typography";
 export * from "./ContainerDefault/ContainerDefault";
+export * from "./CameraCustom/CameraCustom";

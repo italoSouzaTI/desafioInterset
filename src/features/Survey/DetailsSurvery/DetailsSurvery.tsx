@@ -89,55 +89,61 @@ export function DetailsSurvery() {
                         padding: lightTheme.size[16],
                     }}
                 >
-                    <View style={styles.row}>
+                    <View style={styles.containerCard}>
+                        <View style={styles.row}>
+                            <View style={styles.space}>
+                                <Typography label="Categoria " sizeSelect="14" colorsSelect="black-200" />
+                                <Typography
+                                    label={colorBagde(params.data.categoria?.descricao ?? "Não informado")}
+                                    familly="BOLD"
+                                    sizeSelect="14"
+                                />
+                            </View>
+                            <View style={styles.space}>
+                                <Typography
+                                    label="Criado em "
+                                    sizeSelect="14"
+                                    colorsSelect="black-200"
+                                    style={{ textAlign: "right" }}
+                                />
+                                <Typography
+                                    label={params.data.dataHora ? formartDate(params.data.dataHora) : "Não informado"}
+                                    familly="BOLD"
+                                    sizeSelect="14"
+                                />
+                            </View>
+                        </View>
+                        <View style={styles.row}>
+                            <View style={styles.space}>
+                                <Typography label="Anomalia " sizeSelect="14" colorsSelect="black-200" />
+                                <Typography
+                                    label={params.data.anomalia?.nome ?? "Não informado"}
+                                    familly="BOLD"
+                                    sizeSelect="14"
+                                />
+                            </View>
+                            <View style={styles.space}>
+                                <Typography
+                                    label="Tipo "
+                                    sizeSelect="14"
+                                    colorsSelect="black-200"
+                                    style={{ textAlign: "right" }}
+                                />
+                                <Typography
+                                    label={params.data.tipo?.descricao ?? "Não informado"}
+                                    familly="BOLD"
+                                    sizeSelect="14"
+                                />
+                            </View>
+                        </View>
                         <View style={styles.space}>
-                            <Typography label="Categoria " sizeSelect="14" colorsSelect="black-200" />
+                            <Typography label="Observação " sizeSelect="14" colorsSelect="black-200" />
                             <Typography
-                                label={colorBagde(params.data.categoria?.descricao ?? "Não informado")}
+                                label={params.data.observacao ?? "Não informado"}
                                 familly="BOLD"
                                 sizeSelect="14"
                             />
                         </View>
-                        <View style={styles.space}>
-                            <Typography
-                                label="Criado em "
-                                sizeSelect="14"
-                                colorsSelect="black-200"
-                                style={{ textAlign: "right" }}
-                            />
-                            <Typography
-                                label={params.data.dataHora ? formartDate(params.data.dataHora) : "Não informado"}
-                                familly="BOLD"
-                                sizeSelect="14"
-                            />
-                        </View>
-                    </View>
-                    <View style={styles.row}>
-                        <View style={styles.space}>
-                            <Typography label="Anomalia " sizeSelect="14" colorsSelect="black-200" />
-                            <Typography
-                                label={params.data.anomalia?.nome ?? "Não informado"}
-                                familly="BOLD"
-                                sizeSelect="14"
-                            />
-                        </View>
-                        <View style={styles.space}>
-                            <Typography
-                                label="Tipo "
-                                sizeSelect="14"
-                                colorsSelect="black-200"
-                                style={{ textAlign: "right" }}
-                            />
-                            <Typography
-                                label={params.data.tipo?.descricao ?? "Não informado"}
-                                familly="BOLD"
-                                sizeSelect="14"
-                            />
-                        </View>
-                    </View>
-                    <View style={styles.space}>
-                        <Typography label="Observação " sizeSelect="14" colorsSelect="black-200" />
-                        <Typography label={params.data.observacao ?? "Não informado"} familly="BOLD" sizeSelect="14" />
                     </View>
                 </ScrollView>
                 <View style={styles.containerBtn}>

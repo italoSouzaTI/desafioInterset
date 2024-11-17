@@ -1,4 +1,4 @@
-export interface ItipoDTO {
+export interface ITypeDTO {
     descricao: string;
     enum: string;
 }

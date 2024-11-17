@@ -21,6 +21,7 @@ export const styles = StyleSheet.create({
     input: {
         width: "100%",
         textAlignVertical: "top",
+        fontFamily: lightTheme.FONT_FAMILLY.MEDIUM,
     },
     error: {
         color: lightTheme.colors["red-300"],

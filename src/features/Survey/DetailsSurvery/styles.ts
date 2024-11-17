@@ -1,11 +1,17 @@
 import { lightTheme } from "@core/theme/theme";
-import { verticalScale } from "@shared/help/metrics";
+import { moderateScale, verticalScale } from "@shared/help/metrics";
 import { Dimensions, StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
         top: verticalScale(30),
+    },
+    containerCard: {
+        backgroundColor: lightTheme.colors["white-200"],
+        padding: lightTheme.size[16],
+        borderRadius: moderateScale(8),
+        gap: lightTheme.size[16],
     },
     containerImg: {
         width: Dimensions.get("screen").width,

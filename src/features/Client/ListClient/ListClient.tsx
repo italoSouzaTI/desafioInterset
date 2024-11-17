@@ -90,7 +90,7 @@ export function ListClient({ navigation }) {
                                     control,
                                 }}
                                 restInput={{
-                                    placeholder: "Pesquise pelo nome, telefone e email",
+                                    placeholder: "🔍 Nome, telefone ou e-mail",
                                 }}
                             />
                         </View>

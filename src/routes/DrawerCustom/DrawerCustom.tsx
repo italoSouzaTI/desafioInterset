@@ -2,6 +2,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { StackClient } from "@routes/StackClient/StackClient";
 import { StackSurviry } from "@routes/StackSurvery/StackSurviry";
 import { CustomDrawerContent } from "./CustomDrawerContent/CustomDrawerContent";
+import { useEffect } from "react";
 
 type rootDrawer = {
     suveryAction: undefined;
