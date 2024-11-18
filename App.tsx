@@ -17,6 +17,8 @@ import "./ReactotronConfig";
 import { DrawerCustom } from "@routes/DrawerCustom/DrawerCustom";
 import NetInfoProvider from "@core/provider/NetInfoContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { SQLiteProvider } from "expo-sqlite";
+import { initialDatabase } from "@core/model/initialDatabase";
 const queryClient = new QueryClient();
 export default function App() {
     let [fontsLoaded] = useFonts({
@@ -28,6 +30,7 @@ export default function App() {
         <>
             <StatusBar backgroundColor={lightTheme.colors["white-100"]} style="dark" />
             <GestureHandlerRootView style={styles.container}>
+                {/* <SQLiteProvider databaseName="desafio.db" onInit={initialDatabase}> */}
                 <NavigationContainer>
                     <SafeAreaProvider>
                         <NetInfoProvider>
@@ -61,6 +64,7 @@ export default function App() {
                         </NetInfoProvider>
                     </SafeAreaProvider>
                 </NavigationContainer>
+                {/* </SQLiteProvider> */}
             </GestureHandlerRootView>
         </>
     );
