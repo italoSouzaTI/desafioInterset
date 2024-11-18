@@ -11,7 +11,7 @@ interface InputProps {
     dataItens: { label: string; value: string; description?: string }[];
     formProps: UseControllerProps;
     restInput: TextInputProps;
-    onToggle: Function;
+    onToggle: (isOpen: boolean) => void;
 }
 export function Select({ label, dataItens, restInput, formProps, error = "", onToggle }: InputProps) {
     const [isOpenSelect, setIsOpenSelect] = useState<boolean>(false);

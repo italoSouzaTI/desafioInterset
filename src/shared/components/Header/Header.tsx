@@ -15,6 +15,7 @@ interface HeaderProps {
     isIconRight: boolean;
     isFilter?: boolean;
     isSearch?: boolean;
+    viewIconSearch?: boolean;
     fnSearch?: () => void;
     fnFilter?: () => void;
     fnLeft: () => void;
@@ -25,6 +26,7 @@ export function Header({
     isMenu = true,
     isIconRight = true,
     isSearch = false,
+    viewIconSearch = true,
     fnSearch,
     fnFilter,
     fnLeft,
@@ -61,18 +63,21 @@ export function Header({
                     <View style={styles.containerIconsRight}>
                         {isIconRight && (
                             <>
-                                <TouchableOpacity
-                                    style={{
-                                        padding: lightTheme.size[4],
-                                    }}
-                                    onPress={fnSearch}
-                                >
-                                    <Octicons
-                                        name="search"
-                                        size={lightTheme.size[20]}
-                                        color={lightTheme.colors["gray-400"]}
-                                    />
-                                </TouchableOpacity>
+                                {viewIconSearch && (
+                                    <TouchableOpacity
+                                        style={{
+                                            padding: lightTheme.size[4],
+                                        }}
+                                        onPress={fnSearch}
+                                    >
+                                        <Octicons
+                                            name="search"
+                                            size={lightTheme.size[20]}
+                                            color={lightTheme.colors["gray-400"]}
+                                        />
+                                    </TouchableOpacity>
+                                )}
+
                                 {isFilter && (
                                     <TouchableOpacity
                                         style={{

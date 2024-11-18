@@ -20,7 +20,7 @@ type transformInternalArea = {
     value: string;
     description: string;
 };
-type amonaly = { label: string; value: string };
+export type amonaly = { label: string; value: string };
 interface Schema {
     inspectionArea: string;
     isAnomaly: string;
@@ -163,7 +163,6 @@ export function useRegisterSurveryModelView() {
             }
         },
     });
-
     const onPressTouch = () => {
         scrollRef.current?.scrollTo({
             y: 0,
@@ -229,7 +228,6 @@ export function useRegisterSurveryModelView() {
                 categoria: data.category.label,
                 observacao: data.description,
             } as surveryPutDTO;
-            console.log("params", params.data);
             if (params.hasOwnProperty("data")) {
                 const id = params.data.id;
                 console.log("update");
