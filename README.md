@@ -37,8 +37,7 @@ yarn
 #### crie um .env na raiz do seu projeto
 
 ```cm
-EXPO_PUBLIC_API_URL = sua credencial
-EXPO_PUBLIC_API_KEY = sua credencial
+EXPO_PUBLIC_BASE_URL = sua credencial
 ```
 
 #### execute no android
