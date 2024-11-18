@@ -20,7 +20,8 @@ O desafio consiste em mostrar o conhecimento em sincronização de dados online 
 -   [x] Zustand - Para controlar o estado da modal de sincronização.
 -   [x] NetInfo - Para identificar quando está conectado a uma rede ou dado móvel.
 -   [x] HookForm - Para validar o formulário de cadastro e edição.
--   [x] expo-sqlite - Para criar um banco local para guardar as informações tanto online como offline.
+-   [x] reactQuery - Para controlar melhor estado das request.
+-   [] expo-sqlite - Para criar um banco local para guardar as informações tanto online como offline.
 
 ## 🖥️Como utilizar projeto
 
