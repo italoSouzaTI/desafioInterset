@@ -21,6 +21,7 @@ export function ListSurvery({ navigation }) {
         isanomaly,
         openModalFilter,
         top,
+        isConnect,
         setListSurvery,
         handleSubmit,
         handleSearch,
@@ -55,7 +56,7 @@ export function ListSurvery({ navigation }) {
             <View
                 style={{
                     flex: 1,
-                    top: verticalScale(30),
+                    top: verticalScale(isConnect ? 30 : 0),
                 }}
             >
                 <FlatList
@@ -170,7 +171,7 @@ export function ListSurvery({ navigation }) {
                             <ButtomCustom
                                 colorBg="gray-400"
                                 onPress={() => {
-                                    setListSurvery(listSurveryRequest.data?.data);
+                                    setListSurvery(listSurveryRequest.data);
                                     reset();
                                 }}
                             >

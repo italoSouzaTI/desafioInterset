@@ -30,41 +30,41 @@ export default function App() {
         <>
             <StatusBar backgroundColor={lightTheme.colors["white-100"]} style="dark" />
             <GestureHandlerRootView style={styles.container}>
-                {/* <SQLiteProvider databaseName="desafio.db" onInit={initialDatabase}> */}
-                <NavigationContainer>
-                    <SafeAreaProvider>
-                        <NetInfoProvider>
-                            <QueryClientProvider client={queryClient}>
-                                <BottomSheetModalProvider>
-                                    {fontsLoaded ? (
-                                        <>
-                                            <Conection />
-                                            <DrawerCustom />
-                                        </>
-                                    ) : (
-                                        <View
-                                            style={{
-                                                flex: 1,
-                                                justifyContent: "center",
-                                                alignItems: "center",
-                                            }}
-                                        >
-                                            <Image
+                <SQLiteProvider databaseName="desafio.db" onInit={initialDatabase}>
+                    <NavigationContainer>
+                        <SafeAreaProvider>
+                            <NetInfoProvider>
+                                <QueryClientProvider client={queryClient}>
+                                    <BottomSheetModalProvider>
+                                        {fontsLoaded ? (
+                                            <>
+                                                <Conection />
+                                                <DrawerCustom />
+                                            </>
+                                        ) : (
+                                            <View
                                                 style={{
-                                                    width: 100,
-                                                    height: 100,
-                                                    resizeMode: "contain",
+                                                    flex: 1,
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
                                                 }}
-                                                source={require("./assets/splash-icon.png")}
-                                            />
-                                        </View>
-                                    )}
-                                </BottomSheetModalProvider>
-                            </QueryClientProvider>
-                        </NetInfoProvider>
-                    </SafeAreaProvider>
-                </NavigationContainer>
-                {/* </SQLiteProvider> */}
+                                            >
+                                                <Image
+                                                    style={{
+                                                        width: 100,
+                                                        height: 100,
+                                                        resizeMode: "contain",
+                                                    }}
+                                                    source={require("./assets/splash-icon.png")}
+                                                />
+                                            </View>
+                                        )}
+                                    </BottomSheetModalProvider>
+                                </QueryClientProvider>
+                            </NetInfoProvider>
+                        </SafeAreaProvider>
+                    </NavigationContainer>
+                </SQLiteProvider>
             </GestureHandlerRootView>
         </>
     );

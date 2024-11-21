@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getAllSurvery } from "../api/http/listSurvery.http";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { IlistSurveryDTO } from "../api/dto/listSurveryDTO";
 import { getAllInternalInspectionArea } from "../api/http/listInternalInspectionArea.http";
 import { useInternalAreaStore } from "@store/useInternalAreaStore";
@@ -15,9 +15,13 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useForm } from "react-hook-form";
 import { amonaly } from "../RegisterSurvery/useRegisterSurveryModelView";
 import { useSafeInsets } from "@hooks/useSafeInsets";
+import { useSurveryDatabase } from "@core/model/useSurveryDatabase";
+import { NetInfoContext } from "@core/provider/NetInfoContext";
 
 export function useListSuveryModelView() {
     const { top } = useSafeInsets();
+    const { getAll, create } = useSurveryDatabase();
+    const { isConnect } = useContext(NetInfoContext);
     const [listSurvery, setListSurvery] = useState<IlistSurveryDTO[]>([]);
     const [openModalFilter, setOpenModalFilter] = useState<boolean>(false);
     const { handleInternalArea } = useInternalAreaStore((state) => state);
@@ -42,7 +46,42 @@ export function useListSuveryModelView() {
     const [isSelectOpen, setIsSelectOpen] = useState(false);
     const listSurveryRequest = useQuery({
         queryKey: ["KeyListSurvery"],
-        queryFn: getAllSurvery,
+        queryFn: async () => {
+            try {
+                const dbResult = await getAll();
+                if (isConnect) {
+                    const response = await getAllSurvery();
+                    if (dbResult.length && response.data != undefined) {
+                        console.log("algo aqui");
+                    } else {
+                        console.log("criando");
+                        let count = 0;
+                        response.data.forEach((element) => {
+                            create({
+                                id: element.id,
+                                areaVistoriaInterna_id: element.areaVistoriaInterna_id,
+                                dataHora: element.dataHora,
+                                contemAnomalia: element.contemAnomalia,
+                                anomalia: element.anomalia != null ? JSON.stringify(element.anomalia) : "{}",
+                                tipo: element.tipo != null ? JSON.stringify(element.tipo) : "{}",
+                                categoria: element.categoria != null ? JSON.stringify(element.categoria) : "{}",
+                                observacao: element.observacao != null ? JSON.stringify(element.observacao) : "{}",
+                                fotos: element.fotos != null ? JSON.stringify(element.fotos) : "[]",
+                                isSync: true,
+                            });
+                            console.log((count += 1));
+                        });
+                    }
+                    const dbResultFinally = await getAll();
+                    let newData = dbResultFinally.slice();
+                    return await transformaList(newData);
+                } else {
+                    return await transformaList(dbResult);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        },
     });
     const listInternalAreaRequest = useQuery({
         queryKey: ["KeylistInternalArea"],
@@ -60,6 +99,25 @@ export function useListSuveryModelView() {
         queryKey: ["keyAnomaly"],
         queryFn: getAnomaly,
     });
+    async function transformaList(params: IlistSurveryDTO[]) {
+        try {
+            params.forEach(async (data) => {
+                if (data.anomalia != null && typeof data.anomalia === "string") {
+                    data.anomalia = JSON.parse(data.anomalia);
+                }
+                if (data.tipo != null && typeof data.tipo === "string") {
+                    data.tipo = JSON.parse(data.tipo);
+                }
+                if (data.categoria != null && typeof data.categoria === "string") {
+                    data.categoria = JSON.parse(data.categoria);
+                }
+                if (data.fotos != null && typeof data.fotos === "string") {
+                    data.fotos = JSON.parse(data.fotos);
+                }
+            });
+            return params;
+        } catch (error) {}
+    }
     function transformDataListAnomaly() {
         const cloneAnomaly = anomaly.slice();
         let aux = [];
@@ -69,7 +127,6 @@ export function useListSuveryModelView() {
                 value: item.nome,
             });
         });
-        console.log("transformDataListAnomaly", aux);
         setListFilterAnomaly(aux);
     }
 
@@ -95,90 +152,91 @@ export function useListSuveryModelView() {
         });
         setListFilterTypeAnomaly(aux);
     }
-    function handleSearch(data: Schema) {
-        let newData = listSurvery.slice();
-        console.log(data);
-        if (!data.isFilterAnomaly && !data.filterAnomaly && !data.filterTypeAnomaly && !data.filterCategory) {
-            setListSurvery(listSurveryRequest.data?.data);
+    async function handleSearch(data: Schema) {
+        try {
+            const getDB = await getAll();
+            let newData = (await transformaList(getDB)) as IlistSurveryDTO[];
+            if (!data.isFilterAnomaly && !data.filterAnomaly && !data.filterTypeAnomaly && !data.filterCategory) {
+                setListSurvery(newData);
+                reset();
+                setOpenModalFilter((state) => !state);
+                return;
+            }
+            if (data.isFilterAnomaly) {
+                const newDataIsAnmaly = newData.filter((item) => {
+                    const status = data.isFilterAnomaly.label == "Sim" ? true : false;
+                    if (item.contemAnomalia != null) {
+                        if (item.contemAnomalia == status) {
+                            return item;
+                        }
+                    }
+                });
+                if (newDataIsAnmaly) {
+                    newData = newDataIsAnmaly;
+                } else {
+                    reset();
+                    setOpenModalFilter((state) => !state);
+                    return;
+                }
+            }
+            if (data.filterAnomaly) {
+                const newDataAnmaly = newData.filter((item) => {
+                    if (item.anomalia != null) {
+                        if (item.anomalia.id == data.filterAnomaly.label) {
+                            return item;
+                        }
+                    }
+                });
+                if (newDataAnmaly) {
+                    newData = newDataAnmaly;
+                } else {
+                    reset();
+                    setOpenModalFilter((state) => !state);
+                    return;
+                }
+            }
+            if (data.filterTypeAnomaly) {
+                const newDatafilterTypeAnomaly = newData.filter((item) => {
+                    if (item.tipo != null) {
+                        if (item.tipo.enum == data.filterTypeAnomaly.label) {
+                            return item;
+                        }
+                    }
+                });
+                if (newDatafilterTypeAnomaly) {
+                    newData = newDatafilterTypeAnomaly;
+                } else {
+                    setListSurvery([]);
+                    reset();
+                    setOpenModalFilter((state) => !state);
+                    return;
+                }
+            }
+            if (data.filterCategory) {
+                const newDataCategory = newData.filter((item) => {
+                    if (item.categoria != null) {
+                        if (item.categoria.enum == data.filterCategory.label) {
+                            return item;
+                        }
+                    }
+                });
+                if (newDataCategory) {
+                    newData = newDataCategory;
+                } else {
+                    setListSurvery([]);
+                    reset();
+                    setOpenModalFilter((state) => !state);
+                    return;
+                }
+            }
+            setListSurvery((state) => (state = newData));
             reset();
             setOpenModalFilter((state) => !state);
-            return;
-        }
-        if (data.isFilterAnomaly) {
-            const newDataIsAnmaly = newData.filter((item) => {
-                const status = data.isFilterAnomaly.label == "Sim" ? true : false;
-                if (item.contemAnomalia != null) {
-                    if (item.contemAnomalia == status) {
-                        return item;
-                    }
-                }
-            });
-            if (newDataIsAnmaly) {
-                newData = newDataIsAnmaly;
-            } else {
-                reset();
-                setOpenModalFilter((state) => !state);
-                return;
-            }
-        }
-        if (data.filterAnomaly) {
-            const newDataAnmaly = newData.filter((item) => {
-                if (item.anomalia != null) {
-                    if (item.anomalia.id == data.filterAnomaly.label) {
-                        return item;
-                    }
-                }
-            });
-            if (newDataAnmaly) {
-                newData = newDataAnmaly;
-            } else {
-                reset();
-                setOpenModalFilter((state) => !state);
-                return;
-            }
-        }
-        if (data.filterTypeAnomaly) {
-            const newDatafilterTypeAnomaly = newData.filter((item) => {
-                if (item.tipo != null) {
-                    if (item.tipo.enum == data.filterTypeAnomaly.label) {
-                        return item;
-                    }
-                }
-            });
-            if (newDatafilterTypeAnomaly) {
-                newData = newDatafilterTypeAnomaly;
-            } else {
-                setListSurvery([]);
-                reset();
-                setOpenModalFilter((state) => !state);
-                return;
-            }
-        }
-        if (data.filterCategory) {
-            const newDataCategory = newData.filter((item) => {
-                if (item.categoria != null) {
-                    if (item.categoria.enum == data.filterCategory.label) {
-                        return item;
-                    }
-                }
-            });
-            if (newDataCategory) {
-                newData = newDataCategory;
-            } else {
-                setListSurvery([]);
-                reset();
-                setOpenModalFilter((state) => !state);
-                return;
-            }
-        }
-        setListSurvery((state) => (state = newData));
-        reset();
-        setOpenModalFilter((state) => !state);
+        } catch (error) {}
     }
 
     async function requestCameraPermissionIfNeeded() {
         try {
-            console.log("requestCameraPermissionIfNeeded - cameraStatus", cameraStatus);
             if (cameraStatus?.granted !== true) {
                 await requestCameraPermission();
             }
@@ -194,8 +252,9 @@ export function useListSuveryModelView() {
     }, []);
 
     useEffect(() => {
-        if (listSurveryRequest.data?.data != undefined) {
-            setListSurvery(listSurveryRequest.data?.data);
+        if (listSurveryRequest.data != undefined) {
+            console.log("listSurveryRequest", listSurveryRequest.data);
+            setListSurvery(listSurveryRequest.data);
         }
     }, [listSurveryRequest.data]);
 
@@ -237,6 +296,7 @@ export function useListSuveryModelView() {
         isanomaly,
         openModalFilter,
         top,
+        isConnect,
         setListSurvery,
         handleSubmit,
         handleSearch,

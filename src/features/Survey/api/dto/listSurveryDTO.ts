@@ -7,9 +7,11 @@ export interface IlistSurveryDTO {
     areaVistoriaInterna_id: number;
     dataHora: string;
     contemAnomalia: boolean;
-    anomalia: IAnomalyDTO;
-    tipo: ITypeDTO;
-    categoria: ICategoryDTO;
+    anomalia: IAnomalyDTO | string | null;
+    tipo: ITypeDTO | string | string | null;
+    categoria: ICategoryDTO | string | null;
     observacao: string;
-    fotos: string[];
+    fotos: string[] | string;
+    isSync?: boolean;
+    isDelete?: boolean;
 }

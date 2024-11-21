@@ -15,13 +15,13 @@ const NetInfoProvider: React.FC<ChildrenNetInfoProps> = ({ children }) => {
     const netInfo = useNetInfo();
     const [isConnect, setIsConnect] = useState(false);
 
-    useEffect(() => {
-        if (netInfo.isConnected === true && netInfo.type != "vpn") {
-            setIsConnect(true);
-        } else {
-            setIsConnect(false);
-        }
-    }, [netInfo.isConnected]);
+    // useEffect(() => {
+    //     if (netInfo.isConnected === true && netInfo.type != "vpn") {
+    //         setIsConnect(true);
+    //     } else {
+    //         setIsConnect(false);
+    //     }
+    // }, [netInfo.isConnected]);
 
     return <NetInfoContext.Provider value={{ isConnect }}>{children}</NetInfoContext.Provider>;
 };
