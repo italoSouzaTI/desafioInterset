@@ -1,6 +1,6 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useInternalAreaStore } from "@store/useInternalAreaStore";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTypeAnomalyStore } from "@store/useTypeAnomalyStore";
 import { useCategoryStore } from "@store/useCategoryStore";
@@ -14,6 +14,9 @@ import { sendSurveryPhoto } from "../api/http/surveryPhotoSend.http";
 import { surveryPhotoPutDTO } from "../api/dto/surveryPhotoPutDTO";
 import { sendSurveryPut } from "../api/http/surveryPut.http";
 import { sendSurveryDelete } from "../api/http/surveryDelete.http";
+import { useSurveryDatabase } from "@core/model/useSurveryDatabase";
+import { useRemovePhotoDatabase } from "@core/model/useRemovePhotoDatabase";
+import { useNetInfoStore } from "@store/useNetInfoStore";
 type transformInternalArea = {
     areaVistoriada_id: string;
     label: string;
@@ -32,6 +35,9 @@ interface Schema {
 export function useRegisterSurveryModelView() {
     const scrollRef = useRef();
     const { params } = useRoute();
+    const { isConnect } = useNetInfoStore((state) => state);
+    const { create } = useSurveryDatabase();
+    const { createPhoto } = useRemovePhotoDatabase();
     const { goBack, navigate } = useNavigation();
     const { internalArea } = useInternalAreaStore((state) => state);
     const { typeAnomaly } = useTypeAnomalyStore((state) => state);
@@ -47,7 +53,6 @@ export function useRegisterSurveryModelView() {
     ]);
     const queryClient = useQueryClient();
     const registerStore = useRegisterSurveryStore((state) => state);
-    console.log(params);
     const {
         control,
         handleSubmit,
@@ -108,7 +113,7 @@ export function useRegisterSurveryModelView() {
                         text: "Ok",
                         onPress: async () => {
                             queryClient.invalidateQueries({ queryKey: ["KeyListSurvery"] });
-                            goBack();
+                            handleGoBack();
                         },
                     },
                 ]);
@@ -120,7 +125,6 @@ export function useRegisterSurveryModelView() {
     });
     const mutationSurveryPut = useMutation({
         mutationFn: ({ id, data }: { id: number; data: surveryPutDTO }) => {
-            console.log("Mutation function called with:", { id, data });
             return sendSurveryPut(id, data);
         },
         onSuccess: (data) => {
@@ -142,7 +146,7 @@ export function useRegisterSurveryModelView() {
                         text: "Ok",
                         onPress: async () => {
                             queryClient.invalidateQueries({ queryKey: ["KeyListSurvery"] });
-                            goBack();
+                            handleGoBack();
                         },
                     },
                 ]);
@@ -154,7 +158,6 @@ export function useRegisterSurveryModelView() {
     });
     const mutationSurveryDelete = useMutation({
         mutationFn: (data: String) => {
-            console.log("Mutation function called with:", { data });
             return sendSurveryDelete(data);
         },
         onSuccess: (data) => {
@@ -219,35 +222,58 @@ export function useRegisterSurveryModelView() {
 
     function handleSave(data: any) {
         try {
-            const paramForm = {
-                areaVistoriaInterna_id: Number(data.inspectionArea.areaVistoriada_id),
-                dataHora: new Date().toISOString(),
-                contemAnomalia: data.isAnomaly ? true : false,
-                anomalia_id: Number(data.anomaly.label),
-                tipo: data.typeAnomaly.label,
-                categoria: data.category.label,
-                observacao: data.description,
-            } as surveryPutDTO;
-            if (params.hasOwnProperty("data")) {
-                const id = params.data.id;
-                console.log("update");
-                mutationSurveryPut.mutate({ id, data: paramForm });
+            if (isConnect) {
+                const paramForm = {
+                    areaVistoriaInterna_id: Number(data.inspectionArea.areaVistoriada_id),
+                    dataHora: new Date().toISOString(),
+                    contemAnomalia: data.isAnomaly ? true : false,
+                    anomalia_id: Number(data.anomaly.label),
+                    tipo: data.typeAnomaly.label,
+                    categoria: data.category.label,
+                    observacao: data.description,
+                } as surveryPutDTO;
+                if (params.hasOwnProperty("data")) {
+                    const id = params.data.id;
+                    mutationSurveryPut.mutate({ id, data: paramForm });
+                } else {
+                    mutationSurvery.mutate(paramForm);
+                }
             } else {
-                mutationSurvery.mutate(paramForm);
+                create({
+                    areaVistoriaInterna_id: Number(data.inspectionArea.areaVistoriada_id),
+                    dataHora: new Date().toISOString(),
+                    contemAnomalia: data.isAnomaly ? true : false,
+                    anomalia: JSON.stringify(data.anomaly),
+                    tipo: JSON.stringify(data.typeAnomaly),
+                    categoria: JSON.stringify(data.category),
+                    observacao: data.description,
+                    fotos: JSON.stringify(registerStore.register.photo),
+                    isSync: true,
+                });
+                Alert.alert("Sucesso", "Dados inseridos com sucesso.", [
+                    {
+                        text: "Ok",
+                        onPress: async () => {
+                            queryClient.invalidateQueries({ queryKey: ["KeyListSurvery"] });
+                            handleGoBack();
+                        },
+                    },
+                ]);
             }
         } catch (error) {}
     }
-    function removePhoto(item: { url: string; isSync: boolean; id: undefined }) {
+    async function removePhoto(item: { url: string; isSync: boolean; id: undefined }) {
         try {
-            console.log("removePhoto item", item);
-            console.log("removePhoto params?.data.id", params?.data.id);
             let newArray;
             let newRegister = registerStore.register;
-            if (params?.data.id) {
-                console.log("aqui");
+            if (params?.data.id && isConnect) {
                 mutationSurveryDelete.mutate(item.url);
                 newArray = newRegister.photo.filter((photo) => photo.url != item.url);
             } else {
+                await createPhoto({
+                    isDelete: false,
+                    url: item.url,
+                });
                 newArray = newRegister.photo.filter((photo) => photo.url != item.url);
             }
             newRegister.photo = newArray;
@@ -277,7 +303,6 @@ export function useRegisterSurveryModelView() {
             photo: registerStore.register.photo,
         };
         registerStore.handleRegisterSate(newParam);
-        console.log("handleCamera-response", response);
         navigate("CameraCustom");
     }
 
@@ -314,12 +339,28 @@ export function useRegisterSurveryModelView() {
                 return item;
             }
         });
-        const auxTypeAnomaly = listTypeAnomaly.filter((item) => item.value == params.data.tipo.descricao);
-        const auxListAnomaly = listAnomaly.filter((item) => item.label == params.data.anomalia.id);
-        const auxCategory = listCategory.filter((item) => item.label == params.data.categoria.enum);
+        const auxTypeAnomaly = listTypeAnomaly.filter((item) =>
+            item.value == params.data.tipo.hasOwnProperty("descricao")
+                ? params.data.tipo.descricao
+                : params.data.tipo.value
+        );
+        const auxListAnomaly = listAnomaly.filter((item) =>
+            item.label == params.data.anomalia.hasOwnProperty("descricao")
+                ? params.data.anomalia.id
+                : params.data.anomalia.label
+        );
+        const auxCategory = listCategory.filter((item) =>
+            item.label == params.data.categoria.hasOwnProperty("enum")
+                ? params.data.categoria.enum
+                : params.data.categoria.label
+        );
         if (params?.data.fotos.length) {
             params.data.fotos.forEach((element) => {
-                auxPhoto.push({ url: element, isSync: true });
+                if (element.hasOwnProperty("url")) {
+                    auxPhoto.push({ url: element.url, isSync: element.isSync });
+                } else {
+                    auxPhoto.push({ url: element, isSync: true });
+                }
             });
         }
         setValue("isAnomaly", auxIsAnomaly[0]);
@@ -329,7 +370,6 @@ export function useRegisterSurveryModelView() {
         setValue("description", params.data.observacao);
         registerStore.register.photo = auxPhoto;
     }
-    console.log("params", params);
     useEffect(() => {
         if (params?.data && Object.keys(params.data).length > 0) {
             filledRegister();
@@ -338,6 +378,7 @@ export function useRegisterSurveryModelView() {
 
     return {
         control,
+        isConnect,
         errors,
         params,
         listInternalArea,

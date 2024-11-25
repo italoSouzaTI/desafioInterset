@@ -6,4 +6,5 @@ export type surveryPutDTO = {
     tipo: string;
     categoria: string;
     observacao: string;
+    photo?: string[];
 };

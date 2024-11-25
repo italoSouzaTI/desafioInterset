@@ -3,7 +3,7 @@ import { ICategoryDTO } from "./categoryDTO";
 import { ITypeDTO } from "./typeDTO";
 
 export interface IlistSurveryDTO {
-    id: number;
+    id?: number;
     areaVistoriaInterna_id: number;
     dataHora: string;
     contemAnomalia: boolean;

@@ -31,7 +31,7 @@ export function useSurveryDatabase() {
     }
     async function update(data: IlistSurveryDTO) {
         const statement = await database.prepareAsync(
-            "UPDATE Survery SET id=$id,area_vistoria_interna_id=$area_vistoria_interna_id,data_hora=$data_hora,contem_anomalia=$contem_anomalia,anomalia=$anomalia,tipo=$tipo,categoria=$categoria,observacao=$observacao,fotos=$fotos,is_sync=$is_sync,is_delete=$is_delete WHERE id=$id_survery"
+            "UPDATE Survery SET id=$id,area_vistoria_interna_id=$area_vistoria_interna_id,data_hora=$data_hora,contem_anomalia=$contem_anomalia,anomalia=$anomalia,tipo=$tipo,categoria=$categoria,observacao=$observacao,fotos=$fotos,isSync=$isSync,isDelete=$isDelete WHERE id=$id"
         );
         try {
             const result = await statement.executeAsync({
@@ -44,8 +44,8 @@ export function useSurveryDatabase() {
                 $categoria: data.categoria,
                 $observacao: data.observacao,
                 $fotos: data.fotos,
-                $is_sync: data.isSync,
-                $is_delete: data.isDelete,
+                $isSync: data.isSync,
+                $isSelete: data.isDelete,
             });
             const insertRowId = result.lastInsertRowId.toLocaleString();
             return { insertRowId };
@@ -68,7 +68,7 @@ export function useSurveryDatabase() {
     }
     async function removeLogic(data: IlistSurveryDTO) {
         const statement = await database.prepareAsync(
-            "UPDATE survery SET id=$id,area_vistoria_interna_id=$area_vistoria_interna_id,data_hora=$data_hora,contem_anomalia=$contem_anomalia,anomalia=$anomalia,tipo=$tipo,categoria=$categoria,observacao=$observacao,fotos=$fotos,is_sync=$is_sync WHERE id=$id_survery"
+            "UPDATE survery SET id=$id,area_vistoria_interna_id=$area_vistoria_interna_id,data_hora=$data_hora,contem_anomalia=$contem_anomalia,anomalia=$anomalia,tipo=$tipo,categoria=$categoria,observacao=$observacao,fotos=$fotos,isSync=$isSync WHERE id=$id"
         );
         try {
             const result = await statement.executeAsync({
@@ -81,8 +81,8 @@ export function useSurveryDatabase() {
                 $categoria: data.categoria,
                 $observacao: data.observacao,
                 $fotos: data.fotos,
-                $is_sync: false,
-                $is_delete: true,
+                $isSync: false,
+                $isDelete: true,
             });
             const insertRowId = result.lastInsertRowId.toLocaleString();
             return { insertRowId };

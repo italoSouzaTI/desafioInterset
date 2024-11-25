@@ -14,5 +14,29 @@ export async function initialDatabase(database: SQLiteDatabase) {
             isSync  BOOLEAN,
             isDelete  BOOLEAN
         );
+        CREATE TABLE IF NOT EXISTS deletePhoto(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        url TEXT NOT NULL,
+        isDelete  BOOLEAN
+        );
+         CREATE TABLE IF NOT EXISTS anomaly (
+            id INTEGER PRIMARY KEY,
+            nome TEXT NOT NULL
+        );
+        CREATE TABLE IF NOT EXISTS category (
+            prioridade INTEGER PRIMARY KEY,
+            descricao TEXT NOT NULL,
+            enum TEXT NOT NULL 
+        );
+        CREATE TABLE IF NOT EXISTS internalarea (
+            id INTEGER PRIMARY KEY,
+            areaVistoriada_id INTEGER NOT NULL,
+            ambiente TEXT NOT NULL,
+            descricao TEXT NOT NULL,
+            tamanhoProjeto INTEGER ,
+            tamanhoReal INTEGER NOT NULL,
+            inicioVistoria TEXT ,
+            fimVistoria TEXT 
+        );
     `);
 }

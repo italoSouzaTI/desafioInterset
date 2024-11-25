@@ -39,7 +39,7 @@ export function DetailsSurvery() {
     function renderItem(item: any) {
         return (
             <Image
-                source={{ uri: item }}
+                source={{ uri: item.hasOwnProperty("url") ? item.url : item }}
                 style={{
                     width: Dimensions.get("window").width, // A imagem ocupa toda a largura da tela
                     height: 300, // Define a altura da imagem

@@ -1,7 +1,7 @@
 export interface IInternalInspectionAreaDTO {
     id: number;
     areaVistoriada_id: number;
-    ambiente: Environment;
+    ambiente: Environment | string;
     descricao: string;
     tamanhoProjeto: number;
     tamanhoReal: number;

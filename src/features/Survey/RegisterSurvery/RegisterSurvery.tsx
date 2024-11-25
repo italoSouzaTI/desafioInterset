@@ -9,6 +9,7 @@ import { styles } from "./style";
 
 export function RegisterSurvery() {
     const {
+        isConnect,
         control,
         errors,
         params,
@@ -42,7 +43,7 @@ export function RegisterSurvery() {
             <View
                 style={{
                     flex: 1,
-                    top: verticalScale(30),
+                    top: isConnect ? verticalScale(30) : 0,
                 }}
             >
                 <ScrollView

@@ -6,7 +6,7 @@ import { lightTheme } from "@core/theme/theme";
 import { Typography } from "../Typography/Typography";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useContext } from "react";
-import { NetInfoContext } from "@core/provider/NetInfoContext";
+import { useNetInfoStore } from "@store/useNetInfoStore";
 type CustomAction = {
     component: React.ReactNode;
 };
@@ -35,7 +35,7 @@ export function Header({
     customActions,
 }: HeaderProps) {
     const { top } = useSafeInsets();
-    const { isConnect } = useContext(NetInfoContext);
+    const { isConnect } = useNetInfoStore((state) => state);
     return (
         <View style={[styles.container, { top: !isConnect ? 0 : top }]}>
             {isSearch ? (

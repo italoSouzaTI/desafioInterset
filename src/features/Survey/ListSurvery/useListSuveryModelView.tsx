@@ -16,12 +16,17 @@ import { useForm } from "react-hook-form";
 import { amonaly } from "../RegisterSurvery/useRegisterSurveryModelView";
 import { useSafeInsets } from "@hooks/useSafeInsets";
 import { useSurveryDatabase } from "@core/model/useSurveryDatabase";
-import { NetInfoContext } from "@core/provider/NetInfoContext";
+import { useIsFocused } from "@react-navigation/native";
+import { useNetInfoStore } from "@store/useNetInfoStore";
+import { useInternalInspectionAreaDatabase } from "@core/model/useInternalInspectionAreaDatabase";
+import { IInternalInspectionAreaDTO } from "../api/dto/internalInspectionAreaDTO";
 
 export function useListSuveryModelView() {
     const { top } = useSafeInsets();
+    const isFocused = useIsFocused();
     const { getAll, create } = useSurveryDatabase();
-    const { isConnect } = useContext(NetInfoContext);
+    const { getAllInternalInspection, createInternalInspection } = useInternalInspectionAreaDatabase();
+    const { isConnect } = useNetInfoStore((state) => state);
     const [listSurvery, setListSurvery] = useState<IlistSurveryDTO[]>([]);
     const [openModalFilter, setOpenModalFilter] = useState<boolean>(false);
     const { handleInternalArea } = useInternalAreaStore((state) => state);
@@ -32,10 +37,10 @@ export function useListSuveryModelView() {
     const [listFilterTypeAnomaly, setListFilterTypeAnomaly] = useState<{ label: string; value: string }[]>([]);
     const [listFilterAnomaly, setListFilterAnomaly] = useState<{ label: string; value: string }[]>([]);
     const [listFilterCategory, setListFilterCategory] = useState<{ label: string; value: string }[]>([]);
-    const [isanomaly, setIsAnomaly] = useState<amonaly[]>([
+    const isanomaly = [
         { label: "Sim", value: "Sim" },
         { label: "Não", value: "Não" },
-    ]);
+    ] as amonaly[];
     interface Schema {
         isFilterAnomaly: string;
         filterTypeAnomaly: String;
@@ -49,13 +54,15 @@ export function useListSuveryModelView() {
         queryFn: async () => {
             try {
                 const dbResult = await getAll();
+                console.log("isConnect", isConnect);
                 if (isConnect) {
                     const response = await getAllSurvery();
-                    if (dbResult.length && response.data != undefined) {
+                    console.log("cheguei aqui");
+                    if (dbResult.length > 0) {
                         console.log("algo aqui");
-                    } else {
+                        return await transformaList(dbResult);
+                    } else if (response.data != undefined) {
                         console.log("criando");
-                        let count = 0;
                         response.data.forEach((element) => {
                             create({
                                 id: element.id,
@@ -69,7 +76,6 @@ export function useListSuveryModelView() {
                                 fotos: element.fotos != null ? JSON.stringify(element.fotos) : "[]",
                                 isSync: true,
                             });
-                            console.log((count += 1));
                         });
                     }
                     const dbResultFinally = await getAll();
@@ -85,7 +91,32 @@ export function useListSuveryModelView() {
     });
     const listInternalAreaRequest = useQuery({
         queryKey: ["KeylistInternalArea"],
-        queryFn: getAllInternalInspectionArea,
+        queryFn: async () => {
+            const responseDBArea = await getAllInternalInspection();
+            const responseInternalInspectionArea = await getAllInternalInspectionArea();
+            if (isConnect) {
+                if (responseDBArea.length > 0) {
+                    return await transformaArea(responseDBArea);
+                } else if (responseInternalInspectionArea.data != undefined) {
+                    responseInternalInspectionArea.data.forEach(async (element) => {
+                        await createInternalInspection({
+                            id: element.id,
+                            areaVistoriada_id: element.areaVistoriada_id,
+                            ambiente: element.ambiente != null ? JSON.stringify(element.ambiente) : "{}",
+                            descricao: element.descricao,
+                            tamanhoProjeto: element.tamanhoProjeto,
+                            tamanhoReal: element.tamanhoReal,
+                            inicioVistoria: element.inicioVistoria,
+                            fimVistoria: element.fimVistoria,
+                        });
+                    });
+                    const newInternalInspectionArea = await getAllInternalInspectionArea();
+                    return await transformaArea(newInternalInspectionArea);
+                }
+            } else {
+                return await transformaArea(responseDBArea);
+            }
+        },
     });
     const listTypeAnomaly = useQuery({
         queryKey: ["keyTypeAnomaly"],
@@ -99,6 +130,17 @@ export function useListSuveryModelView() {
         queryKey: ["keyAnomaly"],
         queryFn: getAnomaly,
     });
+    async function transformaArea(params: IInternalInspectionAreaDTO[]) {
+        try {
+            params.forEach(async (data) => {
+                if (data.ambiente != null && typeof data.ambiente === "string") {
+                    data.ambiente = JSON.parse(data.ambiente);
+                }
+            });
+            console.log("params", params);
+            return params;
+        } catch (error) {}
+    }
     async function transformaList(params: IlistSurveryDTO[]) {
         try {
             params.forEach(async (data) => {
@@ -253,14 +295,14 @@ export function useListSuveryModelView() {
 
     useEffect(() => {
         if (listSurveryRequest.data != undefined) {
-            console.log("listSurveryRequest", listSurveryRequest.data);
             setListSurvery(listSurveryRequest.data);
         }
-    }, [listSurveryRequest.data]);
+    }, [isFocused, listSurveryRequest.data]);
 
     useEffect(() => {
-        if (listInternalAreaRequest.data?.data != undefined) {
-            handleInternalArea(listInternalAreaRequest.data?.data);
+        if (listInternalAreaRequest.data != undefined) {
+            console.log("listInternalAreaRequest", listInternalAreaRequest);
+            handleInternalArea(listInternalAreaRequest.data);
         }
     }, [listInternalAreaRequest.data]);
 

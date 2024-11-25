@@ -1,8 +1,9 @@
 import React, { useState, createContext, useEffect, ReactNode } from "react";
 import { useNetInfo } from "@react-native-community/netinfo";
+import { useNetInfoStore } from "@store/useNetInfoStore";
 
 interface NetInfoProps {
-    isConnect: boolean;
+    connection: boolean;
 }
 
 type ChildrenNetInfoProps = {
@@ -13,17 +14,18 @@ export const NetInfoContext = createContext<NetInfoProps>({} as NetInfoProps);
 
 const NetInfoProvider: React.FC<ChildrenNetInfoProps> = ({ children }) => {
     const netInfo = useNetInfo();
-    const [isConnect, setIsConnect] = useState(false);
+    const { handleConnection } = useNetInfoStore((state) => state);
 
-    // useEffect(() => {
-    //     if (netInfo.isConnected === true && netInfo.type != "vpn") {
-    //         setIsConnect(true);
-    //     } else {
-    //         setIsConnect(false);
-    //     }
-    // }, [netInfo.isConnected]);
+    useEffect(() => {
+        console.log("netInfo.isConnected");
+        if (netInfo.isConnected == true && netInfo.type != "vpn") {
+            handleConnection(netInfo.isConnected);
+        } else {
+            handleConnection(netInfo.isConnected);
+        }
+    }, [netInfo.isConnected]);
 
-    return <NetInfoContext.Provider value={{ isConnect }}>{children}</NetInfoContext.Provider>;
+    return <NetInfoContext.Provider value={{ connection }}>{children}</NetInfoContext.Provider>;
 };
 
 export default NetInfoProvider;

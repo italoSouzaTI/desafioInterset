@@ -51,7 +51,17 @@ export function CardSurvey({ item }: ICardSurveyPros) {
                     }}
                 >
                     <Typography label="Tipo" sizeSelect="12" colorsSelect="black-200" familly="BOLD" />
-                    <Typography label={item.tipo?.descricao ?? "Não informado"} sizeSelect="12" familly="BOLD" />
+                    <Typography
+                        label={
+                            item.tipo?.hasOwnProperty("descricao")
+                                ? item.tipo?.descricao
+                                : item.tipo?.hasOwnProperty("value")
+                                ? item.tipo?.value
+                                : "Não informado"
+                        }
+                        sizeSelect="12"
+                        familly="BOLD"
+                    />
                 </View>
                 <View
                     style={{
@@ -65,7 +75,13 @@ export function CardSurvey({ item }: ICardSurveyPros) {
                         colorsSelect="black-200"
                         style={{ textAlign: "right" }}
                     />
-                    {colorBagde(item.categoria?.descricao ?? "Não informado")}
+                    {colorBagde(
+                        item.categoria?.hasOwnProperty("descricao")
+                            ? item.categoria?.descricao
+                            : item.categoria?.hasOwnProperty("value")
+                            ? item.categoria?.value
+                            : "Não informado"
+                    )}
                 </View>
             </View>
             <View style={[styles.row, { alignItems: "center" }]}>
@@ -75,7 +91,17 @@ export function CardSurvey({ item }: ICardSurveyPros) {
                     }}
                 >
                     <Typography label="Anomalia" sizeSelect="12" colorsSelect="black-200" familly="BOLD" />
-                    <Typography label={item.anomalia?.nome ?? "Não informado"} sizeSelect="12" familly="BOLD" />
+                    <Typography
+                        label={
+                            item.anomalia?.hasOwnProperty("nome")
+                                ? item.anomalia?.nome
+                                : item.anomalia?.hasOwnProperty("value")
+                                ? item.anomalia?.value
+                                : "Não informado"
+                        }
+                        sizeSelect="12"
+                        familly="BOLD"
+                    />
                 </View>
                 <MaterialIcons
                     name="arrow-forward-ios"

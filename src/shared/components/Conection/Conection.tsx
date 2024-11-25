@@ -5,10 +5,10 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useSafeInsets } from "../../../hooks/useSafeInsets";
 import { lightTheme } from "../../../core/theme/theme";
 import { styles } from "./styles";
-import { NetInfoContext } from "@core/provider/NetInfoContext";
+import { useNetInfoStore } from "@store/useNetInfoStore";
 export function Conection() {
     const { top } = useSafeInsets();
-    const { isConnect } = useContext(NetInfoContext);
+    const { isConnect } = useNetInfoStore((state) => state);
     return (
         <>
             {!isConnect && (

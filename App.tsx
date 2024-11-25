@@ -19,6 +19,9 @@ import NetInfoProvider from "@core/provider/NetInfoContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SQLiteProvider } from "expo-sqlite";
 import { initialDatabase } from "@core/model/initialDatabase";
+import { useEffect } from "react";
+import { useNetInfo } from "@react-native-community/netinfo";
+import { useNetInfoStore } from "@store/useNetInfoStore";
 const queryClient = new QueryClient();
 export default function App() {
     let [fontsLoaded] = useFonts({
@@ -26,6 +29,17 @@ export default function App() {
         RobotoMono_500Medium,
         RobotoMono_700Bold,
     });
+    const netInfo = useNetInfo();
+    const { handleConnection } = useNetInfoStore((state) => state);
+
+    useEffect(() => {
+        console.log("netInfo.isConnected");
+        if (netInfo.isConnected == true && netInfo.type != "vpn") {
+            handleConnection(netInfo.isConnected);
+        } else {
+            handleConnection(netInfo.isConnected);
+        }
+    }, [netInfo.isConnected]);
     return (
         <>
             <StatusBar backgroundColor={lightTheme.colors["white-100"]} style="dark" />
@@ -33,35 +47,33 @@ export default function App() {
                 <SQLiteProvider databaseName="desafio.db" onInit={initialDatabase}>
                     <NavigationContainer>
                         <SafeAreaProvider>
-                            <NetInfoProvider>
-                                <QueryClientProvider client={queryClient}>
-                                    <BottomSheetModalProvider>
-                                        {fontsLoaded ? (
-                                            <>
-                                                <Conection />
-                                                <DrawerCustom />
-                                            </>
-                                        ) : (
-                                            <View
+                            <QueryClientProvider client={queryClient}>
+                                <BottomSheetModalProvider>
+                                    {fontsLoaded ? (
+                                        <>
+                                            <Conection />
+                                            <DrawerCustom />
+                                        </>
+                                    ) : (
+                                        <View
+                                            style={{
+                                                flex: 1,
+                                                justifyContent: "center",
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            <Image
                                                 style={{
-                                                    flex: 1,
-                                                    justifyContent: "center",
-                                                    alignItems: "center",
+                                                    width: 100,
+                                                    height: 100,
+                                                    resizeMode: "contain",
                                                 }}
-                                            >
-                                                <Image
-                                                    style={{
-                                                        width: 100,
-                                                        height: 100,
-                                                        resizeMode: "contain",
-                                                    }}
-                                                    source={require("./assets/splash-icon.png")}
-                                                />
-                                            </View>
-                                        )}
-                                    </BottomSheetModalProvider>
-                                </QueryClientProvider>
-                            </NetInfoProvider>
+                                                source={require("./assets/splash-icon.png")}
+                                            />
+                                        </View>
+                                    )}
+                                </BottomSheetModalProvider>
+                            </QueryClientProvider>
                         </SafeAreaProvider>
                     </NavigationContainer>
                 </SQLiteProvider>
